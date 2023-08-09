@@ -2,49 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Family Interaction Site</title>
+  <title>Screen Sharing Example</title>
 </head>
 <body>
-  <h1>Welcome to our family interaction site!</h1>
-  <p>This site is designed to help us share our games, experiences, and other things with each other.</p>
-  <p>To get started, click the button below to share your screen.</p>
+  <h1>Screen Sharing Example</h1>
+  <p>Click the button below to share your screen.</p>
   <button onclick="shareScreen()">Share Screen</button>
+  <div id="shared-screen"></div>
 
   <script>
-  function shareScreen() {
-    // Get the user's screen share permission.
-    const screen = document.querySelector("video");
+    async function shareScreen() {
+      try {
+        // Get the user's screen share permission.
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
 
-    navigator.mediaDevices.getUserMedia({
-      video: {
-        sourceId: screen,
-      },
-    })
-    .then(stream => {
-      // Create a new div to display the shared screen.
-      const div = document.createElement("div");
-      div.id = "shared-screen";
-      document.body.appendChild(div);
+        // Create a new video element to display the shared screen.
+        const video = document.createElement("video");
+        video.id = "shared-screen-video";
+        video.srcObject = stream;
+        video.play();
 
-      // Create a new video element to display the shared screen.
-      const video = document.createElement("video");
-      video.id = "shared-screen-video";
-      div.appendChild(video);
+        // Append the video element to the shared-screen div.
+        const sharedScreenDiv = document.getElementById("shared-screen");
+        sharedScreenDiv.innerHTML = '';
+        sharedScreenDiv.appendChild(video);
 
-      // Start streaming the shared screen to the video element.
-      video.srcObject = stream;
-      video.play();
-
-      // Stop streaming the shared screen when the user clicks the button again.
-      const button = document.querySelector("button");
-      button.addEventListener("click", () => {
-        stream.stop();
-      });
-    })
-    .catch(error => {
-      console.error(error);
-    });
-  }
+        // Stop streaming the shared screen when the user closes the tab or window.
+        window.addEventListener("beforeunload", () => {
+          stream.getTracks().forEach(track => track.stop());
+        });
+      } catch (error) {
+        console.error("Error sharing screen:", error);
+      }
+    }
   </script>
 </body>
 </html>
