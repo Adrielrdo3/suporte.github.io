@@ -8,7 +8,7 @@
 <p>This site allows you to share your screen with others.</p>
 <button id="share-screen">Share My Screen</button>
 <script>
-function shareScreen() {
+
   // Get the user's screen share permission.
   navigator.mediaDevices.getUserMedia({
     audio: false,
@@ -41,7 +41,7 @@ function shareScreen() {
       pc.setRemoteDescription(sdp);
     };
   });
-}
+
 </script>
 </body>
 </html>
