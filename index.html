@@ -1,5 +1,4 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Screen Sharing Site</title>
@@ -12,7 +11,9 @@ function shareScreen() {
   // Get the user's screen share permission.
   navigator.mediaDevices.getUserMedia({
     audio: false,
-    video: true
+    video: {
+      mediaSource: "screen"
+    }
   }).then(function(stream) {
     // Create a new RTCPeerConnection.
     var pc = new RTCPeerConnection();
