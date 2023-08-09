@@ -6,8 +6,12 @@
 <body onload="shareScreen()">
 <h1>Screen Sharing Site</h1>
 <p>This site allows you to share your screen with others.</p>
+<div id="shared-screen"></div>
 <script>
 function shareScreen() {
+  // Create a new RTCPeerConnection.
+  var pc = new RTCPeerConnection();
+
   // Get the user's screen share permission.
   navigator.mediaDevices.getUserMedia({
     audio: false,
@@ -15,10 +19,7 @@ function shareScreen() {
       mediaSource: "screen"
     }
   }).then(function(stream) {
-    // Create a new RTCPeerConnection.
-    var pc = new RTCPeerConnection();
-
-    // Add a stream to the RTCPeerConnection.
+    // Add the user's screen stream to the connection.
     pc.addStream(stream);
 
     // Create a new RTCSessionDescription.
@@ -40,6 +41,13 @@ function shareScreen() {
 
       // Set the RTCSessionDescription.
       pc.setRemoteDescription(sdp);
+
+      // Add the other party's screen stream to the connection.
+      pc.addStream(sdp.streams[0]);
+
+      // Display the other party's screen on the page.
+      var video = document.getElementById("shared-screen");
+      video.srcObject = sdp.streams[0];
     };
   });
 }
