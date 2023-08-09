@@ -22,17 +22,13 @@
         video.srcObject = stream;
         video.play();
 
-        // Create a new WebSocket connection to the server.
-        const socket = new WebSocket("ws://localhost:8080");
+        // Get the address of the second site.
+        const secondSiteUrl = "http://www.example.com";
 
-        // Start streaming the shared screen to the server.
-        socket.onopen = () => {
-          socket.send(stream);
-        };
-
-        // Stop streaming the shared screen when the user closes the tab or window.
-        window.addEventListener("beforeunload", () => {
-          socket.close();
+        // Send the stream to the second site.
+        fetch(secondSiteUrl, {
+          method: "POST",
+          body: JSON.stringify(stream),
         });
       } catch (error) {
         console.error("Error sharing screen:", error);
