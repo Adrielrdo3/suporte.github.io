@@ -1,27 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Screen Sharing Website</title>
+  <meta charset="UTF-8">
+  <title>Family Interaction Site</title>
 </head>
 <body>
-    <h1>Screen Sharing Website</h1>
-    <div id="screen-sharing-container">
-        <!-- O conteúdo compartilhado da tela aparecerá aqui -->
-    </div>
+  <h1>Welcome to our family interaction site!</h1>
+  <p>This site is designed to help us share our games, experiences, and other things with each other.</p>
+  <p>To get started, click the button below to share your screen.</p>
+  <button onclick="shareScreen()">Share Screen</button>
 
-    <script>
-      // Simulação de compartilhamento de tela (substitua por lógica de compartilhamento real)
-function startScreenSharing() {
-    const screenSharingContainer = document.getElementById('screen-sharing-container');
-    const sharedContent = document.createElement('div');
-    sharedContent.textContent = "Conteúdo compartilhado da tela aqui";
-    screenSharingContainer.appendChild(sharedContent);
-}
+  <script>
+  function shareScreen() {
+    // Get the user's screen share permission.
+    navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: {
+        facingMode: "user",
+        width: 640,
+        height: 480,
+      }
+    })
+    .then(stream => {
+      // Create a new div to display the shared screen.
+      const div = document.createElement("div");
+      div.id = "shared-screen";
+      document.body.appendChild(div);
 
-// Chamada de função para iniciar o compartilhamento de tela
-startScreenSharing();
-    </script>
+      // Create a new video element to display the shared screen.
+      const video = document.createElement("video");
+      video.id = "shared-screen-video";
+      div.appendChild(video);
+
+      // Start streaming the shared screen to the video element.
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch(error => {
+      // Handle any errors.
+    });
+  }
+  </script>
 </body>
 </html>
