@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Screen Sharing Site</title>
+</head>
+<body>
+<h1>Screen Sharing Site</h1>
+<p>This site allows you to share your screen with others.</p>
+<button id="share-screen">Share My Screen</button>
+<script>
+function shareScreen() {
+  // Get the user's screen share permission.
+  navigator.mediaDevices.getUserMedia({
+    audio: false,
+    video: true
+  }).then(function(stream) {
+    // Create a new RTCPeerConnection.
+    var pc = new RTCPeerConnection();
+
+    // Add a stream to the RTCPeerConnection.
+    pc.addStream(stream);
+
+    // Create a new RTCSessionDescription.
+    var offer = pc.createOffer();
+
+    // Set the RTCSessionDescription.
+    pc.setLocalDescription(offer);
+
+    // Send the RTCSessionDescription to the other party.
+    pc.createOffer().then(function(offer) {
+      pc.setLocalDescription(offer);
+      pc.send(offer);
+    });
+
+    // Listen for messages from the other party.
+    pc.onmessage = function(event) {
+      // Get the RTCSessionDescription from the message.
+      var sdp = event.data;
+
+      // Set the RTCSessionDescription.
+      pc.setRemoteDescription(sdp);
+    };
+  });
+}
+</script>
+</body>
+</html>
