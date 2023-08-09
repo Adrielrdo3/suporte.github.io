@@ -1,56 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Screen Sharing Site</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Sharing Website</title>
 </head>
-<body onload="shareScreen()">
-<h1>Screen Sharing Site</h1>
-<p>This site allows you to share your screen with others.</p>
-<div id="shared-screen"></div>
-<script>
-function shareScreen() {
-  // Create a new RTCPeerConnection.
-  var pc = new RTCPeerConnection();
+<body>
+    <h1>Screen Sharing Website</h1>
+    <div id="screen-sharing-container">
+        <!-- O conteúdo compartilhado da tela aparecerá aqui -->
+    </div>
 
-  // Get the user's screen share permission.
-  navigator.mediaDevices.getUserMedia({
-    audio: false,
-    video: {
-      mediaSource: "screen"
-    }
-  }).then(function(stream) {
-    // Add the user's screen stream to the connection.
-    pc.addStream(stream);
-
-    // Create a new RTCSessionDescription.
-    var offer = pc.createOffer();
-
-    // Set the RTCSessionDescription.
-    pc.setLocalDescription(offer);
-
-    // Send the RTCSessionDescription to the other party.
-    pc.createOffer().then(function(offer) {
-      pc.setLocalDescription(offer);
-      pc.send(offer);
-    });
-
-    // Listen for messages from the other party.
-    pc.onmessage = function(event) {
-      // Get the RTCSessionDescription from the message.
-      var sdp = event.data;
-
-      // Set the RTCSessionDescription.
-      pc.setRemoteDescription(sdp);
-
-      // Add the other party's screen stream to the connection.
-      pc.addStream(sdp.streams[0]);
-
-      // Display the other party's screen on the page.
-      var video = document.getElementById("shared-screen");
-      video.srcObject = sdp.streams[0];
-    };
-  });
+    <script>
+      // Simulação de compartilhamento de tela (substitua por lógica de compartilhamento real)
+function startScreenSharing() {
+    const screenSharingContainer = document.getElementById('screen-sharing-container');
+    const sharedContent = document.createElement('div');
+    sharedContent.textContent = "Conteúdo compartilhado da tela aqui";
+    screenSharingContainer.appendChild(sharedContent);
 }
-</script>
+
+// Chamada de função para iniciar o compartilhamento de tela
+startScreenSharing();
+    </script>
 </body>
 </html>
