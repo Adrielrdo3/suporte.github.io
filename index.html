@@ -22,14 +22,17 @@
         video.srcObject = stream;
         video.play();
 
-        // Append the video element to the shared-screen div.
-        const sharedScreenDiv = document.getElementById("shared-screen");
-        sharedScreenDiv.innerHTML = '';
-        sharedScreenDiv.appendChild(video);
+        // Create a new WebSocket connection to the server.
+        const socket = new WebSocket("ws://localhost:8080");
+
+        // Start streaming the shared screen to the server.
+        socket.onopen = () => {
+          socket.send(stream);
+        };
 
         // Stop streaming the shared screen when the user closes the tab or window.
         window.addEventListener("beforeunload", () => {
-          stream.getTracks().forEach(track => track.stop());
+          socket.close();
         });
       } catch (error) {
         console.error("Error sharing screen:", error);
