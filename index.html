@@ -12,7 +12,7 @@
 
   <script>
   function shareScreen() {
-     // Get the user's screen share permission.
+    // Get the user's screen share permission.
     const screen = document.querySelector("screen");
 
     navigator.mediaDevices.getUserMedia({
@@ -21,9 +21,6 @@
       },
     })
     .then(stream => {
-      const video = document.querySelector("video");
-      video.srcObject = stream;
-      video.play();
       // Create a new div to display the shared screen.
       const div = document.createElement("div");
       div.id = "shared-screen";
@@ -37,9 +34,15 @@
       // Start streaming the shared screen to the video element.
       video.srcObject = stream;
       video.play();
+
+      // Stop streaming the shared screen when the user clicks the button again.
+      const button = document.querySelector("button");
+      button.addEventListener("click", () => {
+        stream.stop();
+      });
     })
     .catch(error => {
-      // Handle any errors.
+      console.error(error);
     });
   }
   </script>
